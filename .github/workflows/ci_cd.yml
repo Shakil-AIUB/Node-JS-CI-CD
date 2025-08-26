@@ -21,3 +21,23 @@ jobs:
               run: npm install
             - name: test nodejs
               run: npm run check
+          
+    
+    deploy:
+        needs: test
+        runs-on: self-hosted
+
+        steps:
+
+            - name: Checkout version
+              uses: actions/checkout@v2
+            - name: Install package Node-JS
+              run: npm install
+            - name: Deploy project
+              run: |
+                ls -a
+                pm2 status
+                pm2 delete all || true
+                pm2 start "npm start" --name="nodejs-app"
+                pm2 save
+                
